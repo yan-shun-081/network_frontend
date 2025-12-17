@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>QuickNetwork — Create / Join</title>
 
   <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet">
 
   <style>
     :root {
@@ -21,179 +23,160 @@
       font-family: 'Inter', system-ui, sans-serif;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #111827, #030712);
-      color: #e5e7eb;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 40px 20px;
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #111827, #030712);
+      color:#e5e7eb;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:40px 20px;
     }
 
     .app {
-      max-width: 900px;
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+      max-width:900px;
+      width:100%;
+      display:flex;
+      flex-wrap:wrap;
+      gap:20px;
     }
 
     .card {
-      flex: 1;
-      min-width: 320px;
-      background: var(--card);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      transition: all 0.3s ease;
+      flex:1;
+      min-width:320px;
+      background:var(--card);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+      transition:all .3s ease;
     }
+    .card:hover{ transform:translateY(-3px); }
 
-    .card:hover { transform: translateY(-3px); }
+    h1 { font-weight:700; margin-bottom:10px; }
+    p.lead { color:var(--muted); margin-bottom:20px; }
 
-    h1 { font-weight: 700; margin-bottom: 10px; }
-    p.lead { color: var(--muted); margin-bottom: 20px; }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
+    .tabs { display:flex; gap:10px; margin-bottom:20px; }
     .tab {
-      flex: 1;
-      padding: 14px;
-      background: rgba(255,255,255,0.05);
-      border: none;
-      border-radius: 10px;
-      color: #e5e7eb;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease;
+      flex:1;
+      padding:14px;
+      background:rgba(255,255,255,0.05);
+      border:none;
+      border-radius:10px;
+      color:#e5e7eb;
+      font-weight:600;
+      cursor:pointer;
+      transition:background .2s ease;
+    }
+    .tab.active{
+      background:linear-gradient(90deg,var(--accent),#5b21b6);
+      color:#fff;
     }
 
-    .tab.active {
-      background: linear-gradient(90deg, var(--accent), #5b21b6);
-      color: #fff;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    label { font-size: 13px; color: var(--muted); }
-
+    form { display:flex; flex-direction:column; gap:14px; }
+    label { font-size:13px; color:var(--muted); }
     input, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: transparent;
-      color: inherit;
-      font-size: 15px;
-      transition: border-color 0.2s ease;
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.1);
+      background:transparent;
+      color:inherit;
+      font-size:15px;
+      transition:border-color .2s ease;
+    }
+    input:focus, textarea:focus { border-color:var(--accent); outline:none; }
+    input[type="date"]::-webkit-calendar-picker-indicator{
+      filter:invert(1) sepia(1) saturate(5) hue-rotate(250deg);
+      cursor:pointer;
+    }
+    input[type="date"]{ color-scheme:dark; accent-color:var(--accent); }
+
+    .row{ display:flex; gap:10px; }
+    .row > *{ flex:1; }
+
+    .btn{
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      font-weight:600;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .btn.primary{
+      background:linear-gradient(90deg,var(--accent),#5b21b6);
+      color:#fff;
+    }
+    .btn.primary:hover{ opacity:.9; }
+    .btn.back{
+      margin-bottom:10px;
+      color:var(--accent);
+      background:rgba(255,255,255,0.05);
     }
 
-    input:focus, textarea:focus {
-      border-color: var(--accent);
-      outline: none;
+    .net-list{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:12px;
+    }
+    .net-card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:12px;
+      padding:12px 14px;
+      transition:.2s;
+      white-space:pre-line;
+    }
+    .net-card:hover{ background:rgba(255,255,255,0.08); }
+    .net-card .title{ font-weight:600; }
+    .meta{ font-size:13px; color:var(--muted); margin-top:6px; }
+
+    .toast{
+      position:fixed;
+      right:20px; bottom:20px;
+      background:rgba(0,0,0,0.6);
+      padding:12px 16px;
+      border-radius:10px;
+      backdrop-filter:blur(5px);
+      display:none;
+      font-weight:500;
     }
 
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1) sepia(1) saturate(5) hue-rotate(250deg);
-      cursor: pointer;
-    }
-
-    input[type="date"] { color-scheme: dark; accent-color: var(--accent); }
-
-    .row { display: flex; gap: 10px; }
-    .row > * { flex: 1; }
-
-    .btn {
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .btn.primary {
-      background: linear-gradient(90deg, var(--accent), #5b21b6);
-      color: #fff;
-    }
-
-    .btn.primary:hover { opacity: 0.9; }
-
-    .btn.back {
-      margin-bottom: 10px;
-      color: var(--accent);
-      background: rgba(255,255,255,0.05);
-    }
-
-    .net-list {
-      margin-top: 10px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 12px;
-    }
-
-    .net-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 12px 14px;
-      transition: 0.2s;
-      white-space: pre-line;
-    }
-
-    .net-card:hover { background: rgba(255,255,255,0.08); }
-
-    .net-card .title { font-weight: 600; }
-    .meta { font-size: 13px; color: var(--muted); margin-top: 6px; }
-
-    .toast {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      background: rgba(0,0,0,0.6);
-      padding: 12px 16px;
-      border-radius: 10px;
-      backdrop-filter: blur(5px);
-      display: none;
-      font-weight: 500;
-    }
-
-    @media (max-width: 700px) {
-      .app { flex-direction: column; }
-      body { padding: 20px 10px; }
+    @media (max-width:700px){
+      .app{ flex-direction:column; }
+      body{ padding:20px 10px; }
     }
   </style>
 </head>
 <body>
   <div class="app">
+    <!-- CREATE PANEL -->
     <div class="card" id="createPanel">
       <h1>QuickNetwork</h1>
-      <p class="lead">Create a short-lived network or explore existing ones. All metadata syncs with your backend in real time.</p>
+      <p class="lead">
+        Create a short‑lived network or explore existing ones.
+        All metadata syncs with your backend in real time.
+      </p>
 
       <div class="tabs">
         <button id="tabCreate" class="tab active">Create Network</button>
-        <button id="tabJoin" class="tab">Join Network</button>
+        <button id="tabJoin"   class="tab">Join Network</button>
       </div>
 
       <form id="createForm">
         <label>Network Name <span style="color:var(--error)">*</span></label>
-        <input id="network_name" required maxlength="80" placeholder="Enter a network name">
+        <input id="network_name" required maxlength="80"
+               placeholder="Enter a network name">
 
-        <label>Description <span style="color:var(--error)">*</span> <span style="color:var(--muted)">(max 300 chars)</span></label>
-        <textarea id="description" rows="3" maxlength="300" placeholder="Describe the network" required></textarea>
+        <label>Description <span style="color:var(--error)">*</span>
+               <span style="color:var(--muted)">(max 300 chars)</span></label>
+        <textarea id="description" rows="3" maxlength="300"
+                  placeholder="Describe the network" required></textarea>
 
         <div class="row">
           <div>
@@ -219,83 +202,181 @@
 
         <label>Disappear Date <span style="color:var(--error)">*</span></label>
         <input id="disappear_date" type="date" required>
-        <div style="font-size:13px;color:var(--muted)">Select a date between today and 10 days from now.</div>
+        <div style="font-size:13px;color:var(--muted)">
+          Select a date between today and 10 days from now.
+        </div>
 
         <button type="submit" class="btn primary">Post Network</button>
       </form>
 
-      <div id="createStatus" style="margin-top:10px;font-size:13px;color:var(--muted)"></div>
+      <div id="createStatus"
+           style="margin-top:10px;font-size:13px;color:var(--muted)"></div>
     </div>
 
+    <!-- JOIN PANEL -->
     <div class="card" id="joinPanel" style="display:none">
       <button id="backBtn" class="btn back">← Back</button>
       <h2 style="margin-top:0">Available Networks</h2>
       <div id="networks" class="net-list"></div>
-      <div id="joinStatus" style="margin-top:8px;font-size:13px;color:var(--muted)"></div>
+      <div id="joinStatus"
+           style="margin-top:8px;font-size:13px;color:var(--muted)"></div>
     </div>
   </div>
 
   <div id="toast" class="toast"></div>
 
   <script>
+    /* --------------------------------------------------------------
+       CONFIG & GLOBALS
+       -------------------------------------------------------------- */
     const BACKEND = 'https://network_metadata_backend.ecethre.workers.dev';
+
     const today = new Date();
-    const max = new Date(); max.setDate(today.getDate()+10);
-    const dateInput = document.getElementById('disappear_date');
+    const max = new Date(); max.setDate(today.getDate() + 10);
     const toISO = d => d.toISOString().slice(0,10);
+    const dateInput = document.getElementById('disappear_date');
     dateInput.min = toISO(today);
     dateInput.max = toISO(max);
     dateInput.value = toISO(today);
 
     const tabCreate = document.getElementById('tabCreate');
-    const tabJoin = document.getElementById('tabJoin');
+    const tabJoin   = document.getElementById('tabJoin');
     const createPanel = document.getElementById('createPanel');
-    const joinPanel = document.getElementById('joinPanel');
-    const backBtn = document.getElementById('backBtn');
+    const joinPanel   = document.getElementById('joinPanel');
+    const backBtn    = document.getElementById('backBtn');
     const createForm = document.getElementById('createForm');
-    const toast = document.getElementById('toast');
+    const toast      = document.getElementById('toast');
+
     let cachedNetworks = null;
 
-    tabCreate.addEventListener('click', ()=>switchTab('create'));
-    tabJoin.addEventListener('click', ()=>switchTab('join'));
-    backBtn.addEventListener('click', ()=>switchTab('create'));
+    /* --------------------------------------------------------------
+       TAB SWITCHING
+       -------------------------------------------------------------- */
+    tabCreate.onclick = () => switchTab('create');
+    tabJoin.onclick   = () => switchTab('join');
+    backBtn.onclick   = () => switchTab('create');
 
     function switchTab(tab){
-      if(tab==='create'){
-        createPanel.style.display='block';
-        joinPanel.style.display='none';
+      if(tab === 'create'){
+        createPanel.style.display = 'block';
+        joinPanel.style.display   = 'none';
         tabCreate.classList.add('active');
         tabJoin.classList.remove('active');
-      } else {
-        createPanel.style.display='none';
-        joinPanel.style.display='block';
+      }else{
+        createPanel.style.display = 'none';
+        joinPanel.style.display   = 'block';
         tabJoin.classList.add('active');
         tabCreate.classList.remove('active');
         loadNetworks();
       }
     }
 
+    /* --------------------------------------------------------------
+       TOAST HELPERS
+       -------------------------------------------------------------- */
+    let toastTimeout;
+    function showToast(msg, err = false){
+      toast.style.display = 'block';
+      toast.textContent = msg;
+      toast.style.background = err ?
+        'rgba(239,68,68,0.7)' : 'rgba(16,185,129,0.7)';
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(()=> toast.style.display='none', 3500);
+    }
+
+    /* --------------------------------------------------------------
+       ANDROID BRIDGE WRAPPERS
+       -------------------------------------------------------------- */
+    function requestAd(target){
+      if (window.Android && typeof Android.requestRewardedAd === 'function') {
+        Android.requestRewardedAd(target);
+      } else {
+        console.warn('Android interface not available – ad ignored');
+      }
+    }
+
+    /* --------------------------------------------------------------
+       CREATE NETWORK – POST + REWARDED AD
+       -------------------------------------------------------------- */
+    createForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // basic required‑field validation (HTML already does this, but we double‑check)
+      if (!network_name.value.trim() ||
+          !description.value.trim() ||
+          !phone1.value.trim() ||
+          !link1.value.trim() ||
+          !disappear_date.value) {
+        showToast('Please fill all required fields', true);
+        return;
+      }
+
+      const payload = {
+        network_name:   network_name.value.trim(),
+        description:    description.value.trim(),
+        phone_number_1: phone1.value.trim(),
+        phone_number_2: phone2.value.trim() || null,
+        link_1:         link1.value.trim(),
+        link_2:         link2.value.trim() || null,
+        disappear_date: disappear_date.value
+      };
+
+      document.getElementById('createStatus').textContent = 'Posting...';
+      try {
+        const res = await fetch(`${BACKEND}/add`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Network error');
+
+        const json = await res.json();
+        if (json.success) {
+          showToast('Network created ✓');
+          // ---- AD ----
+          requestAd('createNetwork');            // fire rewarded ad
+          // reset form & UI
+          createForm.reset();
+          dateInput.value = toISO(today);
+          cachedNetworks = null;                    // force reload on join
+          document.getElementById('createStatus').textContent = 'Posted successfully.';
+        } else {
+          showToast(json.error || 'Error posting', true);
+          document.getElementById('createStatus').textContent = 'Error posting.';
+        }
+      } catch (err) {
+        showToast('Failed to post', true);
+        document.getElementById('createStatus').textContent = 'Error posting.';
+      }
+    });
+
+    /* --------------------------------------------------------------
+       JOIN NETWORK – LIST + LINK‑CLICK AD
+       -------------------------------------------------------------- */
     async function loadNetworks(){
       const status = document.getElementById('joinStatus');
       const container = document.getElementById('networks');
       container.innerHTML = '';
       status.textContent = 'Loading...';
+
       try {
         if (!cachedNetworks) {
-          const res = await fetch(BACKEND + '/list');
+          const res = await fetch(`${BACKEND}/list`);
           cachedNetworks = await res.json();
         }
+
         if (!cachedNetworks.length) {
           status.textContent = 'No networks found.';
           return;
         }
         status.textContent = '';
+
         cachedNetworks.forEach(item => {
           const div = document.createElement('div');
           div.className = 'net-card';
           div.innerHTML = `
             <div class="title">${item.network_name || '(no name)'}</div>
-            <div class="meta">${item.description ? item.description.replace(/\n/g, '<br>') : ''}</div>
+            <div class="meta">${item.description ? item.description.replace(/\n/g,'<br>') : ''}</div>
             <div class="meta">Disappear: ${item.disappear_date || '-'}</div>
             <div class="meta">Phone 1: ${item.phone_number_1 || '-'}</div>
             ${item.phone_number_2 ? `<div class="meta">Phone 2: ${item.phone_number_2}</div>` : ''}
@@ -303,59 +384,44 @@
             ${item.link_2 ? `<br><a href="${item.link_2}" target="_blank" style="color:var(--accent)">Link 2</a>` : ''}
           `;
           container.appendChild(div);
+
+          // Attach click‑handler to every link inside this card
+          div.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', ev => {
+              ev.preventDefault();
+              const url = a.href;
+              requestAd(url);          // show rewarded ad first
+            });
+          });
         });
       } catch (err) {
+        console.error(err);
+        status.textContent = 'Error loading networks.';
         showToast('Failed to load networks', true);
-        status.textContent = 'Error loading.';
       }
     }
 
-    createForm.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-
-      // Validate required fields manually too
-      if (!network_name.value.trim() || !description.value.trim() || 
-          !phone1.value.trim() || !link1.value.trim() || !disappear_date.value) {
-        showToast('Please fill all required fields', true);
-        return;
+    /* --------------------------------------------------------------
+       AD CALLBACKS – WILL BE CALLED FROM THE NATIVE CODE
+       -------------------------------------------------------------- */
+    function onAdPreloaded()          { console.log('✅ Ad pre‑loaded'); }
+    function onAdFailedToPreload()    { console.warn('⚠️ Ad preload failed'); }
+    function onAdNotAvailable()       { showToast('Rewarded ad not available', true); }
+    function onAdCompleted(target) {
+      console.log('✅ Ad completed – target:', target);
+      // If target looks like a URL, open it; otherwise just give a toast.
+      if (target && typeof target === 'string' && target.startsWith('http')) {
+        window.open(target, '_blank');
+      } else {
+        showToast('Reward earned');
       }
+    }
 
-      const payload = {
-        network_name: network_name.value.trim(),
-        description: description.value.trim(),
-        phone_number_1: phone1.value.trim(),
-        phone_number_2: phone2.value.trim() || null,
-        link_1: link1.value.trim(),
-        link_2: link2.value.trim() || null,
-        disappear_date: disappear_date.value
-      };
-
-      document.getElementById('createStatus').textContent = 'Posting...';
-      try {
-        const res = await fetch(BACKEND + '/add', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify(payload)
-        });
-        if(!res.ok) throw new Error('Failed');
-        showToast('Network created ✓');
-        createForm.reset();
-        dateInput.value = toISO(today);
-        cachedNetworks = null;
-        document.getElementById('createStatus').textContent = 'Posted successfully.';
-      } catch (err) {
-        showToast('Failed to post', true);
-        document.getElementById('createStatus').textContent = 'Error posting.';
-      }
-    });
-
-    let t;
-    function showToast(msg, err=false){
-      toast.style.display='block';
-      toast.textContent = msg;
-      toast.style.background = err ? 'rgba(239,68,68,0.7)' : 'rgba(16,185,129,0.7)';
-      clearTimeout(t);
-      t = setTimeout(()=>toast.style.display='none', 3500);
+    /* --------------------------------------------------------------
+       INITIALISE – preload first ad (Android only)
+       -------------------------------------------------------------- */
+    if (window.Android && typeof Android.preloadRewardedAd === 'function') {
+      Android.preloadRewardedAd();
     }
   </script>
 </body>
