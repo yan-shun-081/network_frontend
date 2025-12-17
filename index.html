@@ -232,22 +232,23 @@
     const BACKEND = 'https://network_metadata_backend.ecethre.workers.dev';
 
     const today = new Date();
-    const max = new Date(); max.setDate(today.getDate() + 10);
+    const max   = new Date(); max.setDate(today.getDate() + 10);
     const toISO = d => d.toISOString().slice(0,10);
     const dateInput = document.getElementById('disappear_date');
     dateInput.min = toISO(today);
     dateInput.max = toISO(max);
     dateInput.value = toISO(today);
 
-    const tabCreate = document.getElementById('tabCreate');
-    const tabJoin   = document.getElementById('tabJoin');
+    const tabCreate   = document.getElementById('tabCreate');
+    const tabJoin     = document.getElementById('tabJoin');
     const createPanel = document.getElementById('createPanel');
     const joinPanel   = document.getElementById('joinPanel');
-    const backBtn    = document.getElementById('backBtn');
-    const createForm = document.getElementById('createForm');
-    const toast      = document.getElementById('toast');
+    const backBtn     = document.getElementById('backBtn');
+    const createForm  = document.getElementById('createForm');
+    const toast       = document.getElementById('toast');
 
     let cachedNetworks = null;
+    let pendingLink = null;      // <-- stores a link that must open after ad
 
     /* --------------------------------------------------------------
        TAB SWITCHING
@@ -285,7 +286,7 @@
     }
 
     /* --------------------------------------------------------------
-       ANDROID BRIDGE WRAPPERS
+       ANDROID BRIDGE WRAPPER
        -------------------------------------------------------------- */
     function requestAd(target){
       if (window.Android && typeof Android.requestRewardedAd === 'function') {
@@ -301,7 +302,7 @@
     createForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // basic required‑field validation (HTML already does this, but we double‑check)
+      // double‑check required fields (HTML already validates)
       if (!network_name.value.trim() ||
           !description.value.trim() ||
           !phone1.value.trim() ||
@@ -333,12 +334,12 @@
         const json = await res.json();
         if (json.success) {
           showToast('Network created ✓');
-          // ---- AD ----
-          requestAd('createNetwork');            // fire rewarded ad
-          // reset form & UI
+          // ---- SHOW REWARDED AD ----
+          requestAd('createNetwork');   // tag; no URL needed
+          // reset UI
           createForm.reset();
           dateInput.value = toISO(today);
-          cachedNetworks = null;                    // force reload on join
+          cachedNetworks = null;          // force refresh on Join tab
           document.getElementById('createStatus').textContent = 'Posted successfully.';
         } else {
           showToast(json.error || 'Error posting', true);
@@ -351,7 +352,7 @@
     });
 
     /* --------------------------------------------------------------
-       JOIN NETWORK – LIST + LINK‑CLICK AD
+       JOIN NETWORK – LIST + LINK‑CLICK REWARDED AD
        -------------------------------------------------------------- */
     async function loadNetworks(){
       const status = document.getElementById('joinStatus');
@@ -388,9 +389,9 @@
           // Attach click‑handler to every link inside this card
           div.querySelectorAll('a').forEach(a => {
             a.addEventListener('click', ev => {
-              ev.preventDefault();
-              const url = a.href;
-              requestAd(url);          // show rewarded ad first
+              ev.preventDefault();            // stop immediate navigation
+              pendingLink = a.href;            // remember what must open after ad
+              requestAd(a.href);               // trigger rewarded ad
             });
           });
         });
@@ -402,19 +403,26 @@
     }
 
     /* --------------------------------------------------------------
-       AD CALLBACKS – WILL BE CALLED FROM THE NATIVE CODE
+       AD CALLBACKS – called from native code
        -------------------------------------------------------------- */
     function onAdPreloaded()          { console.log('✅ Ad pre‑loaded'); }
     function onAdFailedToPreload()    { console.warn('⚠️ Ad preload failed'); }
     function onAdNotAvailable()       { showToast('Rewarded ad not available', true); }
+
     function onAdCompleted(target) {
       console.log('✅ Ad completed – target:', target);
-      // If target looks like a URL, open it; otherwise just give a toast.
-      if (target && typeof target === 'string' && target.startsWith('http')) {
-        window.open(target, '_blank');
+      // If we have a pending link (i.e. user clicked a link in the list) open it.
+      // Otherwise, if the target itself looks like a URL (e.g. future use), open it.
+      const urlToOpen = pendingLink || (typeof target === 'string' && target.startsWith('http') ? target : null);
+      if (urlToOpen) {
+        // navigate in the same tab – works without popup blockers
+        window.location.href = urlToOpen;
       } else {
+        // No URL to open – just give a reward toast
         showToast('Reward earned');
       }
+      // clear pending for next click
+      pendingLink = null;
     }
 
     /* --------------------------------------------------------------
